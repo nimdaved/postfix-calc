@@ -1,9 +1,9 @@
 package org.ab.service.util;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -16,7 +16,7 @@ public class AriphmeticOperators {
 	public static final String SYMBOL_MINUS = "-";
 	public static final String SYMBOL_PLUS = "+";
 
-	private final Map<String, BiFunction<BigDecimal, BigDecimal, BigDecimal>> OPERATORS = new HashMap<>();
+	private final Map<String, BiFunction<BigDecimal, BigDecimal, BigDecimal>> OPERATORS = new ConcurrentHashMap<>();
 
 	public AriphmeticOperators() {
 		super();
@@ -33,7 +33,7 @@ public class AriphmeticOperators {
 	public void addOperator(String symbol, BiFunction<BigDecimal, BigDecimal, BigDecimal> operator) {
 		OPERATORS.put(symbol, operator);
 	}
-	
+
 	public BiFunction<BigDecimal, BigDecimal, BigDecimal> getOperator(String symbol) {
 		return OPERATORS.get(symbol);
 	}
