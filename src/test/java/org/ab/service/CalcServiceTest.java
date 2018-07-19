@@ -17,12 +17,21 @@ public class CalcServiceTest {
 	private CalcService calcService;
 
 	@Test
-	public void testCalculateSimpleAddCorrectInput() {
-		final String input = "4 5 +";
-		final BigDecimal expectedOutput = new BigDecimal("9");
-		BigDecimal output = calcService.calculate(input);
-		assertEquals(expectedOutput, output);
+	public void testCalculate() {
+		evaluate("4 5 +", "9");
+		evaluate("1 2 3 * + 4 +", "11");
+		evaluate("6 8 2 / 1 - *", "18");
+		evaluate("8 5 * 7 4 2 + * +", "82");
+		evaluate("2 3 + 4 5 * +", "25");
 		
+	}
+	
+	
+	
+	private void evaluate(String input, String expected) {
+		final BigDecimal expectedOutput = new BigDecimal(expected);
+		BigDecimal output = calcService.calculate(input);
+		assertEquals("failed on input: " + input, expectedOutput, output);
 	}
 
 }
