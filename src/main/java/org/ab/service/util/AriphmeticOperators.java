@@ -53,5 +53,9 @@ public class AriphmeticOperators {
 	public static BigDecimal divide(BigDecimal o1, BigDecimal o2) {
 		return o1.divide(o2);
 	}
+	
+	public BigDecimal invertParamsThenApply(BigDecimal left, BigDecimal right, String symbol)  {
+		return this.getOperator(symbol).apply(right, left);
+	}
 
 }

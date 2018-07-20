@@ -1,6 +1,7 @@
 package org.ab.service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.Stack;
 
@@ -21,25 +22,16 @@ public class CalcService {
 	public BigDecimal calculate(String input) {
 		final Set<String> knownOperatorSymbols = ariphmeticOperators.getOperatorSymbols();
 
-		final String[] tokens = StringUtils.split(input, " ");
-		Stack<BigDecimal> stack = new Stack<>();
-		
-		for (String s : tokens) {
-			if (NumberUtils.isNumber(s)) {
-				stack.push(new BigDecimal(s));
-			} else if (knownOperatorSymbols.contains(s)) {
-				BigDecimal right = stack.pop();
-				BigDecimal left = stack.pop();
-				BigDecimal result = ariphmeticOperators.getOperator(s).apply(left, right);
-				stack.push(result);
-			} else {
-				System.out.println("Skipping illegal character: " + s);
-			}
-		}
-	
-		return stack.pop();
+		return Arrays.stream(StringUtils.split(input, " ")).map(String::trim)
+				.filter(s -> NumberUtils.isNumber(s) || knownOperatorSymbols.contains(s))
+				.collect(Stack<BigDecimal>::new,
+						(stack, e) -> stack.push(knownOperatorSymbols.contains(e)
+								? ariphmeticOperators.invertParamsThenApply(stack.pop(), stack.pop(), e)
+								: new BigDecimal(e)),
+						(l, r) -> {//NOP combiner
+						})
+				.pop();
+
 	}
-	
-	
 
 }
