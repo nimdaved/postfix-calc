@@ -55,7 +55,7 @@ public class AriphmeticOperators {
 	}
 	
 	public BigDecimal invertParamsThenApply(BigDecimal left, BigDecimal right, String symbol)  {
-		return this.getOperator(symbol).apply(right, left);
+		return getOperator(symbol).apply(right, left);
 	}
 
 }
