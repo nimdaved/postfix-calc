@@ -21,7 +21,6 @@ public class CalcService {
 
 	public BigDecimal calculate(String input) {
 		final Set<String> knownOperatorSymbols = ariphmeticOperators.getOperatorSymbols();
-
 		return Arrays.stream(StringUtils.split(input, " ")).map(String::trim)
 				.filter(s -> NumberUtils.isNumber(s) || knownOperatorSymbols.contains(s))
 				.collect(Stack<BigDecimal>::new,

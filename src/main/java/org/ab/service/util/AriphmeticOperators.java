@@ -1,11 +1,11 @@
 package org.ab.service.util;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
+import java.util.function.BinaryOperator;
 
 import org.springframework.stereotype.Component;
 
@@ -16,44 +16,29 @@ public class AriphmeticOperators {
 	public static final String SYMBOL_MINUS = "-";
 	public static final String SYMBOL_PLUS = "+";
 
-	private final Map<String, BiFunction<BigDecimal, BigDecimal, BigDecimal>> OPERATORS = new ConcurrentHashMap<>();
+	private final Map<String, BinaryOperator<BigDecimal>> OPERATORS = new ConcurrentHashMap<>();
 
 	public AriphmeticOperators() {
 		super();
-		addOperator(SYMBOL_PLUS, AriphmeticOperators::plus);
-		addOperator(SYMBOL_MINUS, AriphmeticOperators::minus);
-		addOperator(SYMBOL_MULTIPLY, AriphmeticOperators::multiply);
-		addOperator(SYMBOL_DIVIDE, AriphmeticOperators::divide);
+		addOperator(SYMBOL_PLUS, BigDecimal::add);
+		addOperator(SYMBOL_MINUS, BigDecimal::subtract);
+		addOperator(SYMBOL_MULTIPLY, BigDecimal::multiply);
+		addOperator(SYMBOL_DIVIDE, BigDecimal::divide);		
+
 	}
 
 	public Set<String> getOperatorSymbols() {
-		return OPERATORS.keySet().stream().collect(Collectors.toSet());
+		return Collections.unmodifiableSet(OPERATORS.keySet());
 	}
 
-	public void addOperator(String symbol, BiFunction<BigDecimal, BigDecimal, BigDecimal> operator) {
+	public final void addOperator(String symbol, BinaryOperator<BigDecimal> operator) {
 		OPERATORS.put(symbol, operator);
 	}
 
-	public BiFunction<BigDecimal, BigDecimal, BigDecimal> getOperator(String symbol) {
+	private BinaryOperator<BigDecimal> getOperator(String symbol) {
 		return OPERATORS.get(symbol);
 	}
 
-	public static BigDecimal plus(BigDecimal o1, BigDecimal o2) {
-		return o1.add(o2);
-	}
-
-	public static BigDecimal minus(BigDecimal o1, BigDecimal o2) {
-		return o1.subtract(o2);
-	}
-
-	public static BigDecimal multiply(BigDecimal o1, BigDecimal o2) {
-		return o1.multiply(o2);
-	}
-
-	public static BigDecimal divide(BigDecimal o1, BigDecimal o2) {
-		return o1.divide(o2);
-	}
-	
 	public BigDecimal invertParamsThenApply(BigDecimal left, BigDecimal right, String symbol)  {
 		return getOperator(symbol).apply(right, left);
 	}
